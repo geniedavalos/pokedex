@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokédex</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div id="container">
+    <h2><a href="https://fontmeme.com/pokemon-font/"><img src="https://fontmeme.com/permalink/190706/7ab1e18883d333af7aa22de5d961caed.png" alt="pokemon-font" border="0"></a></h2>
+    <div id="pokemon"></div>
+    <div id="pokedex">
+      <div class="poke_info"><a href="https://fontmeme.com/pokemon-font/"><img src="https://fontmeme.com/permalink/190706/21e0b6112130e5bb3d203af697a4604a.png" alt="pokemon-font" border="0"></a></div>
+      <h3 class="pokename">Click a Pokémon to learn more!</h3>
+      <div class="portrait"></div>
+      <ul class="types"></ul>
+      <p class="height"></p>
+      <p class="weight"></p>
+    </div>
+  </div>
+
+  <script>
+    for (var i = 1; i <= 151; i++) {
+      var pokemon_front = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + i + ".png";
+      var pokemon_back = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/" + i + ".png";
+      $('#pokemon').append("<img src='" + pokemon_front + "' data-alt-src='" + pokemon_back + "' alt='pokemon' id='" + i + "'>");
+    }
+
+    $("img").click(function(res) {
+      var i = this.id;
+      $.get("https://pokeapi.co/api/v2/pokemon/" + i + "", function(res) {
+        var name = res.name.charAt(0).toUpperCase() + res.name.slice(1);
+        $('.pokename').html("<h3>" + name + "</h3>");
+        $('.portrait').html("<div class='portrait'> <img src='" + res.sprites.front_default + "' alt='No Pokémon image available!'> </div>");
+        var t_output = '';
+        for (var i = 0; i < res.types.length; i++) {
+          t_output += res.types[i].type.name + '<br>';
+        };
+        $('.types').html('<ul><span>Types:</span> ' + '<li>' + t_output + '</li>' + '</ul>');
+        $('.height').html('<p class="height"><span>Height:</span>  ' + res.height + '</p>');
+        $('.weight').html('<p class="weight"><span>Weight:</span>  ' + res.weight + '</p>');
+      }, "json");
+    });
+  </script>
+
+</body>
+
+</html>
